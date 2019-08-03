@@ -1,0 +1,84 @@
+openapi: 3.0.0
+
+info:
+  title: ASCII Write
+  description: render text with FIG font
+  version: '0.2'
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: local development server
+
+paths:
+  /print/:
+    post:
+      description: render text
+      tags:
+        - Public
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: name of font
+                phrase:
+                  type: string
+                  description: text to render
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+    
+  /fonts/:
+    get:
+      description: retrieve list of available fonts
+      tags:
+        - Public
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fonts:
+                    type: array
+                    items:
+                      type: string
+
+  /font/upload/:
+    post:
+      description: upload font
+      tags:
+        - Private
+      security: 
+        - AuthToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                font:
+                  type: string
+      responses:
+        '201':
+          description: OK
+
+components:
+  securitySchemes:
+    AuthToken:
+      type: apiKey
+      in: header
+      name: Auithorization
